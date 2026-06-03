@@ -1,203 +1,163 @@
 # Employee Data Handling System
 
-A complete Employee Data Handling System built with **Java Spring Boot**, featuring employee management, attendance tracking, leave management, and department administration.
+A complete Employee Data Handling System built with **Java Spring Boot**, featuring employee management, attendance tracking, leave management, department administration, and a frontend login/dashboard.
 
 ## 🚀 Features
 
-### Core Modules
-- **User Authentication** - JWT-based secure authentication with role-based access control
-- **Employee Management** - Complete CRUD operations for employee data
-- **Attendance System** - Track employee check-in/check-out times and working hours
-- **Leave Management** - Request, approve, and track employee leaves with balance management
-- **Department Management** - Organize employees by departments
-- **Shift Management** - Assign and track employee shifts
+- **JWT Authentication** with login and secure REST endpoints
+- **Employee Management** with create/read/update/delete operations
+- **Attendance Tracking** for check-in/check-out records
+- **Leave Management** with requests, approval, and balance tracking
+- **Department Management** for organizing teams
+- **Shift Management** for employee scheduling
 
-### Security Features
-- JWT (JSON Web Token) authentication
-- Role-based authorization (ADMIN, MANAGER, EMPLOYEE)
-- Password encryption using BCrypt
-- Secure REST API endpoints
+## 🛠️ Tech Stack
 
-## 🛠️ Technology Stack
+- Java 21
+- Spring Boot 3.2.0
+- Spring Security
+- Spring Data JPA
+- H2 in-memory database
+- JWT for token-based authentication
+- Maven
+- Vanilla HTML/CSS/JS frontend
 
-- **Java 21**
-- **Spring Boot 3.2.0**
-- **Spring Security** - Authentication & Authorization
-- **Spring Data JPA** - Database operations
-- **MySQL** - Database
-- **JWT** - Token-based authentication
-- **Lombok** - Reduce boilerplate code
-- **Maven** - Build tool
+## 📦 Project Structure
 
-## 📋 Prerequisites
+- `src/main/java` – backend application code
+- `src/main/resources` – Spring Boot configuration
+- `frontend` – static frontend UI for login and dashboard
+- `pom.xml` – Maven build configuration
 
-Before running this project, ensure you have:
+## ✅ Prerequisites
 
-1. **Java 21** or higher installed
-   ```bash
-   java -version
-   ```
+- Java 21 or newer
+- Maven installed or use the included `mvnw` wrapper
 
-2. **MySQL Server** running on localhost:3306
-   ```bash
-   mysql --version
-   ```
+## 🚀 Run the Backend
 
-3. **Maven** (comes with the project as mvnw)
+From the project root:
 
-## 🔧 Setup Instructions
-
-### 1. Clone or Navigate to Project Directory
 ```bash
-cd "d:\Mtech\Project Java\employee-data-system"
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
-### 2. Configure Database
+On Windows, use:
 
-Create a MySQL database:
-```sql
-CREATE DATABASE employee_db;
+```powershell
+mvnw.cmd clean install
+mvnw.cmd spring-boot:run
 ```
 
-**Or** the application will auto-create it on first run due to `createDatabaseIfNotExist=true` parameter.
+The backend starts on `http://localhost:8080`.
 
-### 3. Update Database Credentials
+## 🌐 Run the Frontend
 
-Edit `src/main/resources/application.properties` if needed:
+Open `frontend/index.html` directly in your browser, or launch the static frontend server if you need one.
+
+If you have Python installed:
+
+```bash
+cd frontend
+python -m http.server 3000
+```
+
+Then open `http://localhost:3000`.
+
+## 🔧 Application Configuration
+
+The app currently uses an H2 in-memory database configured in `src/main/resources/application.properties`:
+
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/employee_db?createDatabaseIfNotExist=true
-spring.datasource.username=root
-spring.datasource.password=root
+spring.datasource.url=jdbc:h2:mem:employee_db
+spring.datasource.username=sa
+spring.datasource.password=
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
 ```
 
-### 4. Build the Project
-```bash
-mvnw clean install
-```
+You can access the H2 console at `http://localhost:8080/h2-console`.
 
-### 5. Run the Application
-```bash
-mvnw spring-boot:run
-```
+## 👤 Default Login Credentials
 
-Or run the JAR file:
-```bash
-java -jar target/employee-data-system-1.0.0.jar
-```
+| Username | Password | Role |
+|----------|----------|------|
+| admin | admin123 | ADMIN |
+| manager | manager123 | MANAGER |
+| employee | employee123 | EMPLOYEE |
 
-The application will start on **http://localhost:8080**
+## 📡 Main API Endpoints
 
-## 👤 Default Users
+### Authentication
+- `POST /api/auth/login` – Login and receive a JWT token
+- `POST /api/auth/register` – Register a new user
 
-The system creates default users automatically on first startup:
+### Employees
+- `GET /api/employees`
+- `GET /api/employees/{id}`
+- `POST /api/employees`
+- `PUT /api/employees/{id}`
+- `DELETE /api/employees/{id}`
 
-| Username | Password | Role | Email |
-|----------|----------|------|-------|
-| admin | admin123 | ADMIN | admin@company.com |
-| manager | manager123 | MANAGER | manager@company.com |
-| employee | employee123 | EMPLOYEE | employee@company.com |
+### Departments
+- `GET /api/departments`
+- `GET /api/departments/{id}`
+- `POST /api/departments`
+- `PUT /api/departments/{id}`
+- `DELETE /api/departments/{id}`
 
-## 📡 API Endpoints
+### Attendance
+- `GET /api/attendance/employee/{employeeId}`
+- `POST /api/attendance`
+- `PUT /api/attendance/{id}/checkout`
 
-### Authentication APIs (`/api/auth`)
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login (returns JWT token)
+### Leaves
+- `GET /api/leaves/employee/{employeeId}`
+- `POST /api/leaves`
+- `PUT /api/leaves/{id}/approve`
+- `PUT /api/leaves/{id}/reject`
 
-### Employee APIs (`/api/employees`)
-- `POST /api/employees` - Create employee (ADMIN/MANAGER)
-- `GET /api/employees` - Get all employees
-- `GET /api/employees/{id}` - Get employee by ID
-- `PUT /api/employees/{id}` - Update employee (ADMIN/MANAGER)
-- `DELETE /api/employees/{id}` - Delete employee (ADMIN only)
-- `GET /api/employees/department/{departmentId}` - Get employees by department
+## 🔐 How to Use the JWT Token
 
-### Attendance APIs (`/api/attendance`)
-- `POST /api/attendance` - Mark attendance
-- `PUT /api/attendance/{id}/checkout` - Update checkout time
-- `GET /api/attendance/employee/{employeeId}` - Get employee attendance
-- `GET /api/attendance/employee/{employeeId}/range` - Get attendance by date range
-- `GET /api/attendance/date/{date}` - Get all attendance for a date
+Include this header in protected requests:
 
-### Leave Management APIs (`/api/leaves`)
-- `POST /api/leaves` - Create leave request
-- `PUT /api/leaves/{id}/approve` - Approve leave (ADMIN/MANAGER)
-- `PUT /api/leaves/{id}/reject` - Reject leave (ADMIN/MANAGER)
-- `GET /api/leaves/employee/{employeeId}` - Get employee's leave requests
-- `GET /api/leaves/pending` - Get pending leave requests (ADMIN/MANAGER)
-- `GET /api/leaves/balance/{employeeId}/{year}` - Get leave balance
-
-### Department APIs (`/api/departments`)
-- `POST /api/departments` - Create department (ADMIN)
-- `GET /api/departments` - Get all departments
-- `GET /api/departments/{id}` - Get department by ID
-- `PUT /api/departments/{id}` - Update department (ADMIN)
-- `DELETE /api/departments/{id}` - Delete department (ADMIN)
-
-## 🔐 Authentication Flow
-
-### 1. Login Request
 ```http
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "username": "admin",
-  "password": "admin123"
-}
+Authorization: Bearer YOUR_JWT_TOKEN
 ```
 
-### 2. Login Response
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "data": {
-    "token": "eyJhbGciOiJIUzI1NiJ9...",
-    "username": "admin",
-    "role": "ADMIN",
-    "fullName": "System Administrator"
-  }
-}
-```
+## 🧪 Quick cURL Example
 
-### 3. Using the Token
-Add the JWT token to all subsequent requests:
-```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
-```
+Login:
 
-## 📊 Database Schema
-
-### Main Tables
-- **users** - User authentication and roles
-- **employees** - Employee details
-- **departments** - Department information
-- **attendance** - Daily attendance records
-- **leave_requests** - Leave applications
-- **leave_balance** - Available leave balance per employee
-- **shifts** - Shift timings
-- **employee_shifts** - Employee shift assignments
-
-## 🎯 Testing the Application
-
-### Using cURL
-
-**Login:**
 ```bash
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```
 
-**Create Department (with token):**
+Create a department:
+
 ```bash
 curl -X POST http://localhost:8080/api/departments \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{"departmentCode":"IT","name":"Information Technology","description":"IT Department"}'
 ```
 
-### Using Postman
+## 📝 Notes
+
+- The backend runs on port `8080`.
+- The frontend can be served from `3000` or opened directly.
+- This repository contains both backend and frontend files.
+
+## 📁 GitHub
+
+This repository is pushed to:
+
+`https://github.com/Gurupavani23/Employee-management-System`
 
 1. Import the API collection
 2. Set base URL: `http://localhost:8080`
