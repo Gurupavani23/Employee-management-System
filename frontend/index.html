@@ -329,7 +329,26 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8080';
+        let API_BASE = 'http://localhost:8080';
+
+        async function loadConfig() {
+            try {
+                const response = await fetch('./config.json');
+                if (response.ok) {
+                    const config = await response.json();
+                    if (config.API_BASE) {
+                        API_BASE = config.API_BASE;
+                    }
+                } else {
+                    console.warn('config.json not found; using default API_BASE');
+                }
+            } catch (error) {
+                console.warn('Failed to load config.json; using default API_BASE', error);
+            }
+        }
+
+        loadConfig();
+
         const loginCard = document.getElementById('login-card');
         const dashboard = document.getElementById('dashboard');
         const tableContainer = document.getElementById('table-container');
